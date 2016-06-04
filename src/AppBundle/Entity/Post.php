@@ -38,16 +38,19 @@ class Post
     /**
      * @var string
      *
-     * @ORM\Column(name="date_created", type="string", length=255)
+     * @ORM\Column(name="date_created", type="datetime")
      */
     private $dateCreated;
-
+    public function __construct()
+    {
+      $this->dateCreated = new \DateTime();
+    }
     /**
      * @var string
      *
-     * @ORM\Column(name="text", type="text")
+     * @ORM\Column(name="content", type="text")
      */
-    private $text;
+    private $content;
 
 
     /**
@@ -133,26 +136,26 @@ class Post
     }
 
     /**
-     * Set text
+     * Set content
      *
-     * @param string $text
+     * @param string $content
      *
      * @return Post
      */
-    public function setText($text)
+    public function setContent($content)
     {
-        $this->text = $text;
+        $this->content = $content;
 
         return $this;
     }
 
     /**
-     * Get text
+     * Get content
      *
      * @return string
      */
-    public function getText()
+    public function getContent()
     {
-        return $this->text;
+        return $this->content;
     }
 }

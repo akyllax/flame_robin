@@ -17,11 +17,11 @@ class PostType extends AbstractType
         $builder
             ->add('title')
             ->add('author')
-            ->add('dateCreated')
-            ->add('text')
+            // ->add('dateCreated')
+            ->add('content')
         ;
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */
