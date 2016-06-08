@@ -1,8 +1,15 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <div>
-<a href="login"><h1> Login </h1></a>
-<a href="register"><h1> Register </h1></a>
-<a href="logout"><h1> Log out </h1></a>
+  <h1> Welcome to Flame Robin</h1>
+  {% if app.user %}
+  <h1> You are curently logged in as <span style="color:red">{{ app.user.username }}<span> <h1>
+  <a href="logout"><h1> Log out </h1></a>
+  <a href="myposts"><h1> My Posts</h1></a>
+  <a href="allposts"><h1> All Posts</h1></a>
+  {% else %}
+  <a href="login"><h1> Login </h1></a>
+  <a href="register"><h1> Register </h1></a>
+  {% endif %}
 </div>
 {% endblock %}

@@ -15,7 +15,7 @@
             </tr>
             <tr>
                 <th>Author</th>
-                <td>{{ post.author }}</td>
+                <td>{{ post.author.username }}</td>
             </tr>
             <tr>
                 <th>Datecreated</th>
@@ -30,7 +30,7 @@
 
     <ul>
         <li>
-            <a href="{{ path('post_index') }}">Back to the list</a>
+            <a href="{{ path('homepage') }}">Go back to the homepage</a>
         </li>
         <li>
             <a href="{{ path('post_edit', { 'id': post.id }) }}">Edit</a>

@@ -19,7 +19,7 @@
             <tr>
                 <td><a href="{{ path('post_show', { 'id': post.id }) }}">{{ post.id }}</a></td>
                 <td>{{ post.title }}</td>
-                <td>{{ post.author }}</td>
+                <td>{{ post.author.username }}</td>
                 <td>{{ post.dateCreated|date("d/M/Y") }}</td>
                 <td>{{ post.content }}</td>
                 <td>
@@ -40,6 +40,9 @@
     <ul>
         <li>
             <a href="{{ path('post_new') }}">Create a new entry</a>
+        </li>
+        <li>
+          <a href="{{ path('homepage') }}">Go back to the homepage</a>
         </li>
     </ul>
 {% endblock %}

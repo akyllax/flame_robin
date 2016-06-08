@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Post;
-use AppBundle\Form\PostType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * Post controller.
@@ -21,6 +21,7 @@ class PostController extends Controller
      *
      * @Route("/", name="post_index")
      * @Method("GET")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function indexAction()
     {
@@ -42,6 +43,10 @@ class PostController extends Controller
     public function newAction(Request $request)
     {
         $post = new Post();
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $post->setAuthor($user);
+
         $form = $this->createForm('AppBundle\Form\PostType', $post);
         $form->handleRequest($request);
 
@@ -59,6 +64,19 @@ class PostController extends Controller
         ));
     }
 
+
+    private function checkAction(Post $post)
+    {
+
+      $post_author = $post->getAuthor();
+      $userEntity = $this->getUser();
+
+      if(!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') && $post_author !== $userEntity){
+          return $this->render('errors/error_role.html.twig');
+      }
+    }
+
+
     /**
      * Finds and displays a Post entity.
      *
@@ -69,6 +87,12 @@ class PostController extends Controller
     {
         $deleteForm = $this->createDeleteForm($post);
 
+        $post_author = $post->getAuthor();
+        $userEntity = $this->getUser();
+
+        if($this->checkAction($post)){
+          return $this->checkAction($post);
+        }
         return $this->render('post/show.html.twig', array(
             'post' => $post,
             'delete_form' => $deleteForm->createView(),
@@ -95,7 +119,10 @@ class PostController extends Controller
             return $this->redirectToRoute('post_edit', array('id' => $post->getId()));
         }
 
-        return $this->render('post/edit.html.twig', array(
+          if($this->checkAction($post)){
+          return $this->checkAction($post);
+        }
+            return $this->render('post/edit.html.twig', array(
             'post' => $post,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -119,7 +146,10 @@ class PostController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('post_index');
+        if($this->checkAction($post)){
+          return $this->checkAction($post);
+        }
+        return $this->redirectToRoute('homepage');
     }
 
     /**

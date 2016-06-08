@@ -5,7 +5,10 @@ security:
         AppBundle\Entity\User:
             algorithm: bcrypt
 
-
+    role_hierarchy:
+        ROLE_AUTHOR: [ROLE_USER]
+        ROLE_ADMIN: [ROLE_AUTHOR]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
         our_db_provider:

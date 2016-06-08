@@ -29,10 +29,9 @@ class Post
     private $title;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="author", type="string", length=255)
-     */
+    * @ORM\ManyToOne(targetEntity="User")
+    * @ORM\JoinColumn(name="author", referencedColumnName="id")
+    */
     private $author;
 
     /**
