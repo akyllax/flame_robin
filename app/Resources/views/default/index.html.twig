@@ -1,15 +1,47 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<div>
-  <h1> Welcome to Flame Robin</h1>
-  {% if app.user %}
-  <h1> You are curently logged in as <span style="color:red">{{ app.user.username }}<span> <h1>
-  <a href="logout"><h1> Log out </h1></a>
-  <a href="myposts"><h1> My Posts</h1></a>
-  <a href="allposts"><h1> All Posts</h1></a>
-  {% else %}
-  <a href="login"><h1> Login </h1></a>
-  <a href="register"><h1> Register </h1></a>
-  {% endif %}
-</div>
-{% endblock %}
+  <div>
+    <h1>
+      Welcome to Flame Robin</h1>
+    {% if app.user %}
+      <h1>
+        You are curently logged in as
+        <span style="color:red">{{ app.user.username }}
+          <span>
+            <h1>
+              <a href="logout">
+                <h1>
+                  Log out
+                </h1>
+              </a>
+              {% if is_granted('ROLE_AUTHOR') %}
+                <a href="myposts">
+                  <h1>
+                    My Posts</h1>
+                </a>
+              {% endif %}
+              {% if is_granted('ROLE_ADMIN') %}
+                <a href="allposts">
+                  <h1>
+                    All Posts</h1>
+                </a>
+                <a href="link">
+                  <h1>
+                    Links
+                  </h1>
+                </a>
+              {% endif %}
+            {% else %}
+              <a href="login">
+                <h1>
+                  Login
+                </h1>
+              </a>
+              <a href="register">
+                <h1>
+                  Register
+                </h1>
+              </a>
+            {% endif %}
+          </div>
+        {% endblock %}
