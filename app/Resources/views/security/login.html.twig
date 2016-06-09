@@ -1,0 +1,18 @@
+{# app/Rewsources/views/security/login.html.twig #}
+
+
+{% if error %}
+  <div> {{ error.messageKey|trans(error.messageData, 'security') }}</div>
+
+{% endif %}
+
+<form action="{{ path('login_check') }}" method="post">
+
+  <label for="username">Username: </label>
+  <input type="text" id="username" name="_username" valuse="{{ last_username }}" />
+
+  <label for="password"> Password: </label>
+  <input type="password" id="password" name="_password" />
+
+  <button type="submit"> Login </button>
+</form>
