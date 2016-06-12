@@ -34,10 +34,6 @@ class User implements UserInterface, \Serializable
      */
     private $username;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Length(max=4096)
-     */
     private $plainPassword;
 
     /**
@@ -49,13 +45,14 @@ class User implements UserInterface, \Serializable
     private $password;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Role")
-    * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
-    */
+     * @ORM\ManyToOne(targetEntity="Role")
+     * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     */
     private $role;
 
-    public function getId(){
-      return $this->id;
+    public function getId()
+    {
+        return $this->id;
     }
     public function getEmail()
     {
@@ -76,17 +73,19 @@ class User implements UserInterface, \Serializable
     {
         $this->username = $username;
     }
-    public function setRole(Role $role){
-      $this->role = $role;
+    public function setRole(Role $role)
+    {
+        $this->role = $role;
     }
 
-    public function getRole(){
-      return $this->role;
+    public function getRole()
+    {
+        return $this->role;
     }
 
     public function getRoles()
     {
-      return [$this->role->getRole()];
+        return [$this->role->getRole()];
     }
 
     public function getPlainPassword()
@@ -106,19 +105,18 @@ class User implements UserInterface, \Serializable
 
     public function getPassword()
     {
-      return $this->password;
+        return $this->password;
     }
 
     public function eraseCredentials()
     {
-
     }
 
     public function getSalt()
     {
         // The bcrypt algorithm doesn't require a separate salt.
         // You *may* need a real salt if you choose a different encoder.
-        return null;
+        return;
     }
 
     // other methods, including security methods like getRoles()
@@ -138,7 +136,7 @@ class User implements UserInterface, \Serializable
     /** @see \Serializable::unserialize() */
     public function unserialize($serialized)
     {
-        list (
+        list(
             $this->id,
             $this->username,
             $this->password,
