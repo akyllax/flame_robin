@@ -5,14 +5,16 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use AppBundle\Entity\Post;
+use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\Request;
+
 
 /**
  * Admin Controller.
  *
  * @Route("/admin")
- * @Security("has_role('ROLE_AUTHOR')")
+ * @Security("has_role('ROLE_SUPER_ADMIN')")
  */
 class AdminController extends Controller
 {
@@ -24,18 +26,36 @@ class AdminController extends Controller
    */
   public function indexAction()
   {
-      // var_dump($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN'));
       $em = $this->getDoctrine()->getManager();
-      if (true === $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-          $posts = $em->getRepository('AppBundle:Post')->findAll();
-      } elseif (true === $this->get('security.authorization_checker')->isGranted('ROLE_AUTHOR')) {
-          $current_user_id = $this->getUser()->getId();
-          $userEntity = $this->getUser();
-          $posts = $em->getRepository('AppBundle:Post')->findBy(['author' => $userEntity]);
+      $users = $em->getRepository('AppBundle:User')->findAll();
+
+      return $this->render('admin/index.html.twig', array(
+    'users' => $users,
+  ));
+  }
+
+  /**
+   * Displays a form to edit an existing User entity.
+   *
+   * @Route("/{id}/edit", name="admin_edit")
+   * @Method({"GET", "POST"})
+   */
+  public function editAction(Request $request, User $user)
+  {
+      $editForm = $this->createForm('AppBundle\Form\AdminType', $user);
+      $editForm->handleRequest($request);
+
+      if ($editForm->isSubmitted() && $editForm->isValid()) {
+          $em = $this->getDoctrine()->getManager();
+          $em->persist($user);
+          $em->flush();
+
+          return $this->redirectToRoute('admin_edit', array('id' => $user->getId()));
       }
 
-      return $this->render('post/index.html.twig', array(
-          'posts' => $posts,
+      return $this->render('admin/edit.html.twig', array(
+          'user' => $user,
+          'edit_form' => $editForm->createView(),
       ));
   }
 }

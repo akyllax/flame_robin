@@ -7,12 +7,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Link;
-use AppBundle\Form\LinkType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * Link controller.
  *
  * @Route("/link")
+ * @Security("has_role('ROLE_ADMIN')")
  */
 class LinkController extends Controller
 {

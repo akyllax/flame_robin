@@ -31,6 +31,13 @@
                   </h1>
                 </a>
               {% endif %}
+              {% if is_granted('ROLE_SUPER_ADMIN')%}
+                <a href="admin">
+                  <h1>
+                    Admin Page
+                  </h1>
+                </a>
+              {% endif %}
             {% else %}
               <a href="login">
                 <h1>

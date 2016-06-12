@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Role
+ * Role.
  *
  * @ORM\Table(name="role")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\RoleRepository")
@@ -35,9 +35,8 @@ class Role
      */
     private $name;
 
-
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -47,7 +46,7 @@ class Role
     }
 
     /**
-     * Set role
+     * Set role.
      *
      * @param string $role
      *
@@ -61,7 +60,7 @@ class Role
     }
 
     /**
-     * Get role
+     * Get role.
      *
      * @return string
      */
@@ -71,7 +70,7 @@ class Role
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -85,7 +84,7 @@ class Role
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -93,5 +92,9 @@ class Role
     {
         return $this->name;
     }
-}
 
+    public function __toString()
+    {
+        return $this->getName();
+    }
+}
