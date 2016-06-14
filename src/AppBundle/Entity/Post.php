@@ -147,7 +147,6 @@ class Post
 
         return $this;
     }
-
     /**
      * Get content
      *
@@ -156,5 +155,9 @@ class Post
     public function getContent()
     {
         return $this->content;
+    }
+
+    public function __toString(){
+      return $this->getTitle();
     }
 }
