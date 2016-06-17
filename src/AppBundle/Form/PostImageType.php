@@ -18,7 +18,7 @@ class PostImageType extends AbstractType
         $builder
             // ->add('path')
             ->add('post')
-            ->add('image', FileType::class, array('label' => 'Post Image'))
+            ->add('image', FileType::class, array('label' => 'Post Image', 'multiple' => true))
         ;
     }
 
