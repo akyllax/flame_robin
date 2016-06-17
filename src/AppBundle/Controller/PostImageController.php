@@ -44,23 +44,27 @@ class PostImageController extends Controller
         $form = $this->createForm('AppBundle\Form\PostImageType', $postImage);
         $form->handleRequest($request);
 
+        /* @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
+        $files = $postImage->getImage();
+        $em = $this->getDoctrine()->getManager();
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($postImage);
+            $post_title = $postImage->getPost()->getTitle();
 
-          $post_title = $postImage->getPost()->getTitle();
-
-            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
-            $file = $postImage->getImage();
+            foreach ($files as $file) {
+                $postImage = new PostImage();
+            // $file = $postImage->getImage();
             $fileName = md5(uniqid()).'.'.$file->guessExtension();
-            $file->move(
+                $file->move(
             $this->container->getParameter('post_image').$post_title,
             $fileName
             );
-            $path = '../web/assets/post_images/'.$post_title.'/';
-            $postImage->setPath($path);
-            $postImage->setImage($fileName);
-            $postImage->setImageName($fileName);
+                $path = '../web/assets/post_images/'.$post_title.'/';
+                $postImage->setPath($path);
+                $postImage->setImage($fileName);
+                $postImage->setImageName($fileName);
+                $em->persist($postImage);
+            }
             $em->flush();
 
             return $this->redirectToRoute('postimage_show', array('id' => $postImage->getId()));

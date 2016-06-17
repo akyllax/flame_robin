@@ -3,8 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * PostImage.
@@ -31,10 +30,10 @@ class PostImage
     private $path;
 
     /**
-    * @var string
-    *
-    * @ORM\Column(name="image_name", type="string", length=255)
-    */
+     * @var string
+     *
+     * @ORM\Column(name="image_name", type="string", length=255)
+     */
     private $imageName;
 
     /**
@@ -45,16 +44,21 @@ class PostImage
 
     protected $image;
 
+    // public function __construct()
+    // {
+    //     $this->image = new ArrayCollection();
+    // }
+
     public function setImageName($imageName)
     {
-      $this->imageName = $imageName;
+        $this->imageName = $imageName;
 
-      return $this;
+        return $this;
     }
 
     public function getImageName()
     {
-      return $this->imageName;
+        return $this->imageName;
     }
     public function setImage($image)
     {
