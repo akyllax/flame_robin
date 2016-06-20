@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Post;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Post controller.
@@ -46,12 +48,22 @@ class PostController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $post->setAuthor($user);
-
         $form = $this->createForm('AppBundle\Form\PostType', $post);
         $form->handleRequest($request);
-
+        $images = [];
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $postImages = $post->getPostImages();
+            $post->setPostImages(new ArrayCollection());
+            foreach ($postImages as $image) {
+                $fileName = md5(uniqid()).'.'.$image->guessExtension();
+                if ($image->move(
+                $this->container->getParameter('post_image').$post->getTitle(),
+                $fileName)) {
+                    // $images[] = $fileName;
+                  $post->addPostImage(array('fileName' => $fileName));
+                }
+            }
             $em->persist($post);
             $em->flush();
 
@@ -64,18 +76,15 @@ class PostController extends Controller
         ));
     }
 
-
     private function checkAction(Post $post)
     {
+        $post_author = $post->getAuthor();
+        $userEntity = $this->getUser();
 
-      $post_author = $post->getAuthor();
-      $userEntity = $this->getUser();
-
-      if(!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') && $post_author !== $userEntity){
-          return $this->render('errors/error_role.html.twig');
-      }
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') && $post_author !== $userEntity) {
+            return $this->render('errors/error_role.html.twig');
+        }
     }
-
 
     /**
      * Finds and displays a Post entity.
@@ -89,10 +98,16 @@ class PostController extends Controller
 
         $post_author = $post->getAuthor();
         $userEntity = $this->getUser();
-
-        if($this->checkAction($post)){
-          return $this->checkAction($post);
+        // $images = [];
+        // foreach ($post->getPostImages() as $image) {
+        //   var_dump($image);die;
+        //     $images[] = new File($this->container->getParameter('post_image').$post->getTitle().'/'.$image);
+        // }
+        // $post->setPostImages($images);
+        if ($this->checkAction($post)) {
+            return $this->checkAction($post);
         }
+
         return $this->render('post/show.html.twig', array(
             'post' => $post,
             'delete_form' => $deleteForm->createView(),
@@ -111,18 +126,39 @@ class PostController extends Controller
         $editForm = $this->createForm('AppBundle\Form\PostType', $post);
         $editForm->handleRequest($request);
 
+        // $original_images = clone $post->getPostImages();
+        $original_images = $post->getPostImages();
+        var_dump($original_images); // object
+
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $postImages = $post->getPostImages();
+            $post->setPostImages([]);
+            var_dump($original_images); // not same as 1st dump
+            die;
+
+            foreach ($postImages as $image) {
+                $fileName = md5(uniqid()).'.'.$image->guessExtension();
+                if ($image->move(
+                $this->container->getParameter('post_image').$post->getTitle(),
+                $fileName)) {
+                    // $images[] = $fileName;
+                  $post->addPostImage(array('fileName' => $fileName));
+
+
+                }
+            }
             $em->persist($post);
             $em->flush();
 
             return $this->redirectToRoute('post_edit', array('id' => $post->getId()));
         }
 
-          if($this->checkAction($post)){
-          return $this->checkAction($post);
+        if ($this->checkAction($post)) {
+            return $this->checkAction($post);
         }
-            return $this->render('post/edit.html.twig', array(
+
+        return $this->render('post/edit.html.twig', array(
             'post' => $post,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -146,9 +182,10 @@ class PostController extends Controller
             $em->flush();
         }
 
-        if($this->checkAction($post)){
-          return $this->checkAction($post);
+        if ($this->checkAction($post)) {
+            return $this->checkAction($post);
         }
+
         return $this->redirectToRoute('homepage');
     }
 

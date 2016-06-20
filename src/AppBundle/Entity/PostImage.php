@@ -3,7 +3,6 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * PostImage.
@@ -43,11 +42,6 @@ class PostImage
     private $post;
 
     protected $image;
-
-    // public function __construct()
-    // {
-    //     $this->image = new ArrayCollection();
-    // }
 
     public function setImageName($imageName)
     {
@@ -108,7 +102,6 @@ class PostImage
     public function setPost($post)
     {
         $this->post = $post;
-        //no bun, crapa in controller. perfect <3 :)) mersi si scuze ca te tot deranjez
 
         return $this;
     }

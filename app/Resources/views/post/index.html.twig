@@ -11,6 +11,7 @@
                 <th>Author</th>
                 <th>Datecreated</th>
                 <th>Content</th>
+                <th>Name </th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -22,6 +23,7 @@
                 <td>{{ post.author.username }}</td>
                 <td>{{ post.dateCreated|date("d/M/Y") }}</td>
                 <td>{{ post.content }}</td>
+                <td>{% for image in post.postImages %} {{ image }}</br> {% endfor %}</td>
                 <td>
                     <ul>
                         <li>

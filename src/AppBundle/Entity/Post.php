@@ -3,9 +3,10 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Post
+ * Post.
  *
  * @ORM\Table(name="post")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PostRepository")
@@ -29,9 +30,9 @@ class Post
     private $title;
 
     /**
-    * @ORM\ManyToOne(targetEntity="User")
-    * @ORM\JoinColumn(name="author", referencedColumnName="id")
-    */
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="author", referencedColumnName="id")
+     */
     private $author;
 
     /**
@@ -40,9 +41,37 @@ class Post
      * @ORM\Column(name="date_created", type="datetime")
      */
     private $dateCreated;
+
+    /**
+     * @ORM\Column(name="images", type="array")
+     */
+    private $postImages;
+
+    public function getPostImages()
+    {
+        // return new ArrayCollection();
+        return $this->postImages;
+    }
+
+    public function addPostImage($postImage)
+    {
+        if(!$this->postImages->contains($postImage)){
+          $this->postImages->add($postImage);
+        }
+        // $this->postImages[] = $postImage;
+
+        return $this;
+    }
+    public function setPostImages($postImages)
+    {
+      $this->postImages = $postImages;
+
+      return $this;
+    }
     public function __construct()
     {
-      $this->dateCreated = new \DateTime();
+        $this->dateCreated = new \DateTime();
+        $this->postImages = new ArrayCollection();
     }
     /**
      * @var string
@@ -51,9 +80,8 @@ class Post
      */
     private $content;
 
-
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -63,7 +91,7 @@ class Post
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -77,7 +105,7 @@ class Post
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -87,7 +115,7 @@ class Post
     }
 
     /**
-     * Set author
+     * Set author.
      *
      * @param string $author
      *
@@ -101,7 +129,7 @@ class Post
     }
 
     /**
-     * Get author
+     * Get author.
      *
      * @return string
      */
@@ -111,7 +139,7 @@ class Post
     }
 
     /**
-     * Set dateCreated
+     * Set dateCreated.
      *
      * @param string $dateCreated
      *
@@ -125,7 +153,7 @@ class Post
     }
 
     /**
-     * Get dateCreated
+     * Get dateCreated.
      *
      * @return string
      */
@@ -135,7 +163,7 @@ class Post
     }
 
     /**
-     * Set content
+     * Set content.
      *
      * @param string $content
      *
@@ -148,7 +176,7 @@ class Post
         return $this;
     }
     /**
-     * Get content
+     * Get content.
      *
      * @return string
      */
@@ -157,7 +185,8 @@ class Post
         return $this->content;
     }
 
-    public function __toString(){
-      return $this->getTitle();
+    public function __toString()
+    {
+        return $this->getTitle();
     }
 }

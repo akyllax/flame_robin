@@ -50,11 +50,11 @@ class PostImageController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post_title = $postImage->getPost()->getTitle();
+            $post = $postImage->getPost();
 
             foreach ($files as $file) {
                 $postImage = new PostImage();
-            // $file = $postImage->getImage();
-            $fileName = md5(uniqid()).'.'.$file->guessExtension();
+                $fileName = md5(uniqid()).'.'.$file->guessExtension();
                 $file->move(
             $this->container->getParameter('post_image').$post_title,
             $fileName
@@ -63,11 +63,12 @@ class PostImageController extends Controller
                 $postImage->setPath($path);
                 $postImage->setImage($fileName);
                 $postImage->setImageName($fileName);
+                $postImage->setPost($post);
                 $em->persist($postImage);
             }
             $em->flush();
 
-            return $this->redirectToRoute('postimage_show', array('id' => $postImage->getId()));
+            return $this->redirectToRoute('homepage');
         }
 
         return $this->render('postimage/new.html.twig', array(
