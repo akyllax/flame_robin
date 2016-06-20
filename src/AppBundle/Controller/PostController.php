@@ -124,10 +124,10 @@ class PostController extends Controller
     {
         $deleteForm = $this->createDeleteForm($post);
         $editForm = $this->createForm('AppBundle\Form\PostType', $post);
+        $original_images = $post->getPostImages();
         $editForm->handleRequest($request);
 
         // $original_images = clone $post->getPostImages();
-        $original_images = $post->getPostImages();
         var_dump($original_images); // object
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
